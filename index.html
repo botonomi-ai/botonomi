@@ -303,24 +303,69 @@
     }
 
     @media screen and (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      .hero p {
-        font-size: 1rem;
-      }
-      nav {
-        flex-direction: column;
-        align-items: center;
-        margin-top: 1rem;
-      }
-      .chatbot-popup {
-        width: 90vw;
-        height: 60vh;
-        right: 5vw;
-        bottom: 120px;
-      }
-    }
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    max-width: 90%;
+  }
+
+  .section h1 {
+    font-size: 2.2rem;
+  }
+
+  .section h2 {
+    font-size: 1.4rem;
+  }
+
+  form {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  input, textarea {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  button.submit {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .chatbot-popup {
+    width: 90vw;
+    height: 60vh;
+    right: 5vw;
+    bottom: 120px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+}
+
 	#space-bg {
   position: absolute;
   top: 100px; /* below the header */
