@@ -301,8 +301,24 @@
       background: #222;
       color: white;
     }
+	.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--primary);
+  cursor: pointer;
+  z-index: 1001;
+}
+
 
     @media screen and (max-width: 768px) {
+	.hamburger {
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
   header {
     flex-direction: column;
     align-items: center;
@@ -310,10 +326,15 @@
   }
 
   nav {
+    display: none;
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 1rem;
+    background: var(--glass-bg);
+    padding: 1rem;
+    margin-top: 4rem;
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
   }
 
   .hero h1 {
@@ -360,7 +381,9 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-
+	nav.show {
+    display: flex;
+  }
   .card {
     padding: 1.5rem;
   }
@@ -392,15 +415,17 @@
 <div id="space-bg"></div>
 
   <header>
-    <div class="logo-wrapper">
-      <img src="botonomi2.png" alt="Botonomi Logo">
-    </div>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#features">Services</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+  <div class="logo-wrapper">
+    <img src="botonomi2.png" alt="Botonomi Logo">
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <nav id="mainNav">
+    <a href="#about">About</a>
+    <a href="#features">Services</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
 
   <section class="hero">
     <h1>Automation Reimagined</h1>
@@ -483,5 +508,12 @@
       }
     }
   </script>
+  <script>
+  function toggleMenu() {
+    const nav = document.getElementById("mainNav");
+    nav.classList.toggle("show");
+  }
+</script>
+
 </body>
 </html>
