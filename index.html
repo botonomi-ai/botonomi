@@ -526,13 +526,13 @@
 </script>
 <script>
 document.getElementById('contact-form').addEventListener('submit', async function (e) {
-  e.preventDefault(); // Stop page from reloading
+  e.preventDefault();
 
   const form = e.target;
   const data = {
-    name: form.name.value,
-    email: form.email.value,
-    message: form.message.value,
+    name: form.name.value.trim(),
+    email: form.email.value.trim(),
+    message: form.message.value.trim()
   };
 
   const status = document.getElementById('status');
@@ -542,14 +542,14 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     const response = await fetch('https://botonomi.app.n8n.cloud/webhook/contact-form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     });
 
     if (response.ok) {
       status.textContent = "✅ Message sent!";
       form.reset();
     } else {
-      status.textContent = "❌ Error sending.";
+      status.textContent = "❌ Server error.";
     }
   } catch (err) {
     console.error(err);
@@ -557,6 +557,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   }
 });
 </script>
+
 
 </body>
 </html>
