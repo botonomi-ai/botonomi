@@ -512,18 +512,43 @@
       bot.style.display = bot.style.display === "flex" ? "none" : "flex";
     }
 
-    function sendMessage(event) {
-      if (event.key === "Enter") {
-        const input = event.target;
-        const chatArea = document.getElementById("chatArea");
-        const message = input.value.trim();
-        if (!message) return;
-        chatArea.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
-        chatArea.innerHTML += `<p><strong>Bot:</strong> Let me process that for you...</p>`;
-        input.value = "";
-        chatArea.scrollTop = chatArea.scrollHeight;
+    async function sendMessage(event) {
+  if (event.key === "Enter") {
+    const input = event.target;
+    const chatArea = document.getElementById("chatArea");
+    const message = input.value.trim();
+    if (!message) return;
+
+    // Show user message and placeholder
+    chatArea.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+    chatArea.innerHTML += `<p id="bot-typing"><strong>Bot:</strong> <em>typing...</em></p>`;
+    input.value = "";
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    try {
+      const response = await fetch("https://botonomi.app.n8n.cloud/webhook/chatbot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message })
+      });
+
+      const data = await response.json();
+      const botReply = data.reply || "Sorry, I couldn't understand that.";
+
+      // Replace the placeholder with actual response
+      const typingElement = document.getElementById("bot-typing");
+      if (typingElement) {
+        typingElement.outerHTML = `<p><strong>Bot:</strong> ${botReply}</p>`;
       }
+
+      chatArea.scrollTop = chatArea.scrollHeight;
+    } catch (error) {
+      console.error("Bot error:", error);
+      chatArea.innerHTML += `<p><strong>Bot:</strong> ⚠️ There was an error processing your request.</p>`;
     }
+  }
+}
+
   </script>
   <script>
   function toggleMenu() {
