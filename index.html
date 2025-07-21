@@ -499,57 +499,53 @@
   </div>
 
   <script>
-    const scrollBtn = document.getElementById("scrollToTopBtn");
-    window.onscroll = () => {
-      scrollBtn.style.display = window.scrollY > 200 ? "flex" : "none";
-    };
-    scrollBtn.onclick = () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+  const scrollBtn = document.getElementById("scrollToTopBtn");
+  window.onscroll = () => {
+    scrollBtn.style.display = window.scrollY > 200 ? "flex" : "none";
+  };
+  scrollBtn.onclick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    function toggleChatbot() {
-      const bot = document.getElementById("chatbot");
-      bot.style.display = bot.style.display === "flex" ? "none" : "flex";
-    }
+  function toggleChatbot() {
+    const bot = document.getElementById("chatbot");
+    bot.style.display = bot.style.display === "flex" ? "none" : "flex";
+  }
 
-    async function sendMessage(event) {
-  if (event.key === "Enter") {
-    const input = event.target;
-    const chatArea = document.getElementById("chatArea");
-    const message = input.value.trim();
-    if (!message) return;
+  function sendMessage(event) {
+    if (event.key === "Enter") {
+      const input = event.target;
+      const chatArea = document.getElementById("chatArea");
+      const message = input.value.trim();
+      if (!message) return;
 
-    // Show user message and placeholder
-    chatArea.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
-    chatArea.innerHTML += `<p id="bot-typing"><strong>Bot:</strong> <em>typing...</em></p>`;
-    input.value = "";
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    try {
-      const response = await fetch("https://botonomi.app.n8n.cloud/webhook/chatbot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: message })
-      });
-
-      const data = await response.json();
-      const botReply = data.reply || "Sorry, I couldn't understand that.";
-
-      // Replace the placeholder with actual response
-      const typingElement = document.getElementById("bot-typing");
-      if (typingElement) {
-        typingElement.outerHTML = `<p><strong>Bot:</strong> ${botReply}</p>`;
-      }
-
+      // Show user message
+      chatArea.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+      input.value = "";
       chatArea.scrollTop = chatArea.scrollHeight;
-    } catch (error) {
-      console.error("Bot error:", error);
-      chatArea.innerHTML += `<p><strong>Bot:</strong> ⚠️ There was an error processing your request.</p>`;
+
+      // Send to n8n chatbot webhook
+      fetch("https://botonomi.app.n8n.cloud/webhook/chatbot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: message }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // Show bot's reply
+          chatArea.innerHTML += `<p><strong>Bot:</strong> ${data.reply}</p>`;
+          chatArea.scrollTop = chatArea.scrollHeight;
+        })
+        .catch((error) => {
+          chatArea.innerHTML += `<p><strong>Bot:</strong> ⚠️ There was an error processing your request.</p>`;
+          chatArea.scrollTop = chatArea.scrollHeight;
+        });
     }
   }
-}
+</script>
 
-  </script>
   <script>
   function toggleMenu() {
     const nav = document.getElementById("mainNav");
