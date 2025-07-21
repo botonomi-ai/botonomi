@@ -465,19 +465,16 @@
   </section>
 
   <section class="section" id="contact">
-    <h2>Talk to Our Bots (or Us)</h2>
-    <form id="contact-form">
-  <input type="text" name="name" placeholder="Your Name" required />
-  <input type="email" name="email" placeholder="Your Email" required />
-  <textarea name="message" placeholder="Tell us what you need..." rows="5" required></textarea>
-  <button type="submit" class="submit">Send Message</button>
-  <p id="status"></p>
-</form>
+  <h2>Talk to Our Bots (or Us)</h2>
+  <form id="contact-form">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" placeholder="Tell us what you need..." rows="5" required></textarea>
+    <button type="submit" class="submit">Send Message</button>
+    <p id="status" style="margin-top: 10px; color: var(--primary);"></p>
+  </form>
+</section>
 
-
-
-
-  </section>
 
   <footer>
     <p>&copy; 2025 Botonomi. Designed for the future. Engineered with grit.</p>
@@ -528,7 +525,7 @@
 </script>
 <script>
 document.getElementById('contact-form').addEventListener('submit', async function (e) {
-  e.preventDefault();
+  e.preventDefault(); // Stop form from refreshing the page
 
   const form = e.target;
   const data = {
@@ -543,7 +540,9 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   try {
     const response = await fetch('https://botonomi.app.n8n.cloud/webhook/contact-form', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(data)
     });
 
@@ -551,7 +550,8 @@ document.getElementById('contact-form').addEventListener('submit', async functio
       status.textContent = "✅ Message sent!";
       form.reset();
     } else {
-      status.textContent = "❌ Server error.";
+      const errorText = await response.text();
+      status.textContent = `❌ Server error: ${errorText}`;
     }
   } catch (err) {
     console.error(err);
@@ -559,6 +559,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   }
 });
 </script>
+
 
 
 
