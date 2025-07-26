@@ -512,56 +512,38 @@
     bot.style.display = bot.style.display === "flex" ? "none" : "flex";
   }
 
-  let chatbotStage = "askName";
-let userData = {
-  name: "",
-  email: "",
-  message: ""
-};
+  function sendMessage(event) {
+    if (event.key === "Enter") {
+      const input = event.target;
+      const chatArea = document.getElementById("chatArea");
+      const message = input.value.trim();
+      if (!message) return;
 
-function sendMessage(event) {
-  if (event.key === "Enter") {
-    const input = event.target;
-    const chatArea = document.getElementById("chatArea");
-    const userText = input.value.trim();
-    if (!userText) return;
+      // Show user message
+      chatArea.innerHTML += <p><strong>You:</strong> ${message}</p>;
+      input.value = "";
+      chatArea.scrollTop = chatArea.scrollHeight;
 
-    chatArea.innerHTML += `<p><strong>You:</strong> ${userText}</p>`;
-    input.value = "";
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    if (chatbotStage === "askName") {
-      userData.name = userText;
-      chatbotStage = "askEmail";
-      chatArea.innerHTML += `<p><strong>Bot:</strong> Great to meet you, ${userData.name}! What's your email?</p>`;
-    } else if (chatbotStage === "askEmail") {
-      userData.email = userText;
-      chatbotStage = "askMessage";
-      chatArea.innerHTML += `<p><strong>Bot:</strong> Awesome. Now tell me what you’d like help with?</p>`;
-    } else if (chatbotStage === "askMessage") {
-      userData.message = userText;
-      chatbotStage = "done";
-      chatArea.innerHTML += `<p><strong>Bot:</strong> Processing your request...</p>`;
-
+      // Send to n8n chatbot webhook
       fetch("https://botonomi.app.n8n.cloud/webhook/chatbot", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData)
+        body: JSON.stringify({ message: message }),
       })
-        .then(res => res.json())
-        .then(data => {
-          chatArea.innerHTML += `<p><strong>Bot:</strong> ${data.reply}</p>`;
+        .then((res) => res.json())
+        .then((data) => {
+          // Show bot's reply
+          chatArea.innerHTML += <p><strong>Bot:</strong> ${data.reply}</p>;
           chatArea.scrollTop = chatArea.scrollHeight;
         })
-        .catch(() => {
-          chatArea.innerHTML += `<p><strong>Bot:</strong> ⚠️ Something went wrong. Please try again later.</p>`;
+        .catch((error) => {
+          chatArea.innerHTML += <p><strong>Bot:</strong> ⚠️ There was an error processing your request.</p>;
+          chatArea.scrollTop = chatArea.scrollHeight;
         });
     }
   }
-}
-
 </script>
 
   <script>
@@ -616,7 +598,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     } else {
       const error = await response.text();
       console.warn("Server response:", error);
-      status.textContent = `❌ Failed to send. Try again later.`;
+      status.textContent = ❌ Failed to send. Try again later.;
     }
   } catch (err) {
     console.error("Request error:", err);
